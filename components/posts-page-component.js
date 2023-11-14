@@ -2,32 +2,34 @@ import { USER_POSTS_PAGE } from "../routes.js";
 import { renderHeaderComponent } from "./header-component.js";
 import { posts, goToPage } from "../index.js";
 import { getPosts } from "../api.js";
+import { formatDistance } from 'date-fns'
+import { ru } from 'date-fns/locale'
 
 export function renderPostsPageComponent({ appEl }) {
 	// TODO: реализовать рендер постов из api!
 	console.log("Актуальный список постов:", posts);
-	
-	const getApiPosts = posts.map((postItem) => {
-			return {
-				userId: postItem.id,
-				userImageUrl: postItem.imageUrl,
-				postCreatedAt: "11.11.23",
-				description: postItem.description,
-				postId: postItem.user.id,
-				userName: postItem.user.name,
-				userLogin: postItem.user.login,
-				postImageUrl: postItem.user.imageUrl,
-				usersLikes: postItem.likes,
-				isLiked: postItem.isLiked,
-			}
-		})
 
-	
+	const getApiPosts = posts.map((postItem) => {
+		return {
+			userId: postItem.id,
+			userImageUrl: postItem.imageUrl,
+			postCreatedAt: formatDistance(new Date(postItem.createdAt), new Date, { locale: ru }),
+			description: postItem.description,
+			postId: postItem.user.id,
+			userName: postItem.user.name,
+			userLogin: postItem.user.login,
+			postImageUrl: postItem.user.imageUrl,
+			usersLikes: postItem.likes,
+			isLiked: postItem.isLiked,
+		}
+	})
+
+
 	/**
 	 * TODO: чтобы отформатировать дату создания поста в виде "19 минут назад"
 	 * можно использовать https://date-fns.org/v2.29.3/docs/formatDistanceToNow
 	 */
-	
+
 	const appHtml = getApiPosts.map((postItem) => {
 		return `
 		<div class="page-container">
@@ -46,10 +48,9 @@ export function renderPostsPageComponent({ appEl }) {
 							<img src="./assets/images/like-active.svg">
 						</button>
 						<p class="post-likes-text">
-							Нравится: ${
-								postItem.usersLikes.length > 0 ? `${ postItem.usersLikes[postItem.usersLikes.length - 1].name} 
-										${postItem.length - 1 > 0 ? 'и ещё ' + (postItem.length - 1): ''}`: '0'
-						}
+							Нравится: ${postItem.usersLikes.length > 0 ? `${postItem.usersLikes[postItem.usersLikes.length - 1].name} 
+										${postItem.length - 1 > 0 ? 'и ещё ' + (postItem.length - 1) : ''}` : '0'
+			}
 						</p>
 					</div>
 					<p class="post-text">
@@ -63,7 +64,7 @@ export function renderPostsPageComponent({ appEl }) {
 			</ul>
 		</div>`
 	}).join();
-		
+
 	appEl.innerHTML = appHtml;
 
 	renderHeaderComponent({

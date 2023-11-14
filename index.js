@@ -114,7 +114,7 @@ const renderApp = () => {
         console.log("Добавляю пост...", { description, imageUrl });
 				addPost({
           token: getToken(),
-          imageUrl}).then(() =>{
+          imageUrl}).then(() => {
 						goToPage(POSTS_PAGE);
 					})
       },
