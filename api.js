@@ -2,7 +2,7 @@
 // "боевая" версия инстапро лежит в ключе prod
 import { renderApp, setPosts } from "./index.js";
 
-const personalKey = "prod";//dmitriev-denis
+const personalKey = "dmitriev-denis";//prod
 const baseHost = " https://wedev-api.sky.pro";
 const postsHost = `${baseHost}/api/v1/${personalKey}/instapro`;
 
@@ -116,4 +116,36 @@ export function getPostsOfUser({ token, userId }) {
           alert('Кажется, у вас сломался интернет, попробуйте позже')
           console.warn(error)
       })
+}
+
+export function addLikePost({ token, postId }) {
+  return fetch(`${postsHost}/${postId}/like`, {
+      method: 'POST',
+      headers: {
+          Authorization: token,
+      },
+  }).then((response) => {
+      if (response.status === 401) {
+          alert('Лайкать посты могут только авторизованные пользователи')
+          throw new Error('Нет авторизации')
+      }
+
+      return response.json()
+  })
+}
+
+export function removeLikePost({ token, postId }) {
+  return fetch(`${postsHost}/${postId}/dislike`, {
+      method: 'POST',
+      headers: {
+          Authorization: token,
+      },
+  }).then((response) => {
+      if (response.status === 401) {
+          alert('Войдите, чтобы убрать лайк')
+          throw new Error('Нет авторизации')
+      }
+
+      return response.json()
+  })
 }
