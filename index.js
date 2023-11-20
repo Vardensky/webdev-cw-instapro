@@ -21,7 +21,7 @@ export let page = null;
 export let posts = [];
 
 export const setPosts = (newPosts) => {
-  posts = newPosts
+	posts = newPosts
 }
 
 export const getToken = () => {
@@ -71,27 +71,27 @@ export const goToPage = (newPage, data) => {
 		}
 
 		if (newPage === USER_POSTS_PAGE) {
-      page = LOADING_PAGE
-      renderApp()
-      const userId = data.userId
+			page = LOADING_PAGE
+			renderApp()
+			const userId = data.userId
 
-      return getPostsOfUser({ token: getToken(), userId: userId })
-          .then((newPosts) => {
-              page = USER_POSTS_PAGE
-              posts = newPosts
-              renderApp()
-          })
-          .catch((error) => {
-              console.error(error)
-              goToPage(POSTS_PAGE)
-          })
-    }
+			return getPostsOfUser({ token: getToken(), userId: userId })
+				.then((newPosts) => {
+					page = USER_POSTS_PAGE
+					posts = newPosts
+					renderApp()
+				})
+				.catch((error) => {
+					console.error(error)
+					goToPage(POSTS_PAGE)
+				})
+		}
 
-    page = newPage;
-    renderApp();
+		page = newPage;
+		renderApp();
 
-    return;
-  }
+		return;
+	}
 
 	throw new Error("страницы не существует");
 };
@@ -125,12 +125,16 @@ export const renderApp = () => {
 			onAddPostClick({ description, imageUrl }) {
 				// TODO: реализовать добавление поста в API
 				console.log("Добавляю пост...", { description, imageUrl });
-				addPost({
-					token: getToken(),
-					imageUrl
-				}).then(() => {
-					goToPage(POSTS_PAGE);
+				addPost({ 
+					description, 
+					imageUrl, 
+					token: getToken() 
 				})
+					.then((data) => {
+						if (data) {
+							goToPage(POSTS_PAGE);
+						}
+					});
 			},
 		});
 	}

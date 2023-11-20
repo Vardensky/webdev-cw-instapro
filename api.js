@@ -1,6 +1,7 @@
 // Замени на свой, чтобы получить независимый от других набор данных.
 // "боевая" версия инстапро лежит в ключе prod
 import { renderApp, setPosts } from "./index.js";
+import { replaceSave } from "./helpers.js";
 
 const personalKey = "dmitriev-denis";//prod
 const baseHost = " https://wedev-api.sky.pro";
@@ -76,11 +77,7 @@ export function addPost({ token, imageUrl }) {
   return fetch(postsHost, {
       method: 'POST',
       body: JSON.stringify({
-          description: commentInputElement.value
-              .replaceAll('&', '&amp;')
-              .replaceAll('<', '&lt;')
-              .replaceAll('>', '&gt;')
-              .replaceAll('"', '&quot;'),
+          description: commentInputElement.value,
           imageUrl,
       }),
       headers: {
